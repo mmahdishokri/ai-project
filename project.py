@@ -28,6 +28,7 @@ class Cell:
     output = np.int
 
 
+
 # we have Layer(s) in Neural Network which contains some Cells
 class Layer:
     self = []
@@ -37,7 +38,10 @@ class Layer:
 
 
 def announce_output(layer):
-    #todo print the max
+    #   todo print the max
+    return Cell(1)
+
 
 def announce_error():
-    #todo the sum of the Squares
+    #   todo the sum of the Squares
+    return Cell(1)
