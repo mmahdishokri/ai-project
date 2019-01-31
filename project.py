@@ -19,7 +19,8 @@ string = idx2numpy.convert_to_string(read_array)
 
 
 class Image:
-    self = np.array()
+    pixels = np.array()
+    num = int
 
 
 class Cell:
@@ -28,6 +29,7 @@ class Cell:
 
     weights = np.array()
     output = np.float
+
 
 # we have Layer(s) in Neural Network which contains some Cells
 class Layer:
@@ -38,7 +40,10 @@ class Layer:
 
 
 def announce_output(layer):
-    #todo print the max
+    #   todo print the max
+    return Cell(1)
+
 
 def announce_error():
-    #todo the sum of the Squares
+    #   todo the sum of the Squares
+    return Cell(1)
