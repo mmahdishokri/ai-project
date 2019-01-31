@@ -11,7 +11,6 @@ def calc_cell_output(c, im):
 def get_f(im):
     f = np.array([0]*10)
     f[im.num] = 1
-    print(f)
     return f
 
 
