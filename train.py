@@ -8,12 +8,6 @@ def calc_cell_output(c, im):
     return np.dot(c.weights, im.pixels) / len(c.weights)
 
 
-def get_f(im):
-    f = np.array([0]*10)
-    f[im.num] = 1
-    return f
-
-
 def mira_update_cell_weights(l, im, max_cell):
     if im.num == max_cell.num:
         return
@@ -32,11 +26,6 @@ def perceptron_update_cell_weights(l, im, max_cell):
     # TODO: learning rate, time folan
 
 
-def train_cell(c, im):
-    im = Image(im)
-    mira_update_cell_weights(c, im)
-
-
 def train_layer(l, im):
     max_cell = l.cells[0]
     for c in l.cells:
@@ -45,3 +34,4 @@ def train_layer(l, im):
             max_cell = c
     perceptron_update_cell_weights(l, im, max_cell)
     #   mira_update_cell_weights(l, im, max_cell)
+    # todo kernel perceptron update_cell_weights

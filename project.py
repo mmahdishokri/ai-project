@@ -2,14 +2,14 @@ import idx2numpy
 import numpy as np
 
 # First to read the training dataSet
-images = idx2numpy.convert_from_file('train-images-idx3-ubyte.idx')
-labels = idx2numpy.convert_from_file('train-labels-idx1-ubyte.idx')
-images_read = open('train-images-idx1-ubyte.idx', 'rb')
-labels_read = open('train-labels-idx1-ubyte.idx', 'rb')
+images = idx2numpy.convert_from_file('images.idx')
+labels = idx2numpy.convert_from_file('labels.idx')
+images_read = open('images.idx', 'rb')
+labels_read = open('labels.idx', 'rb')
 # to write on it
-f_write = open('myfile_copy2.idx', 'wb')
-idx2numpy.convert_to_file(f_write, read_array)
-string = idx2numpy.convert_to_string(read_array)
+# f_write = open('myfile_copy2.idx', 'wb')
+# idx2numpy.convert_to_file(f_write, read_array)
+# string = idx2numpy.convert_to_string(read_array)
 
 # read_array = idx2numpy.convert_from_file('myfile.idx')
 # f_read = open('myfile.idx', 'rb')
@@ -62,4 +62,3 @@ def put_random_weights(cell):
     cell.weights = []
     for i in range(size):
         cell.weights.append(np.random.random_sample())
-
