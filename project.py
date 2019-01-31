@@ -6,12 +6,24 @@ images = idx2numpy.convert_from_file('train-images-idx3-ubyte.idx')
 labels = idx2numpy.convert_from_file('train-labels-idx1-ubyte.idx')
 images_read = open('train-images-idx1-ubyte.idx', 'rb')
 labels_read = open('train-labels-idx1-ubyte.idx', 'rb')
-
 # to write on it
 f_write = open('myfile_copy2.idx', 'wb')
 idx2numpy.convert_to_file(f_write, read_array)
 string = idx2numpy.convert_to_string(read_array)
 
+# read_array = idx2numpy.convert_from_file('myfile.idx')
+# f_read = open('myfile.idx', 'rb')
+#
+# read_array = idx2numpy.convert_from_file(f_read)
+# string = f_read.read()
+# read_array = idx2numpy.convert_from_string(string)
+#
+#
+# idx2numpy.convert_to_file('myfile_copy.idx', read_array)
+# f_write = open('myfile_copy2.idx', 'wb')
+# idx2numpy.convert_to_file(f_write, read_array)
+# string = idx2numpy.convert_to_string(read_array)
+#
 # Image
 # Label which is just a digit
 
@@ -25,9 +37,8 @@ class Cell:
     def __init__(self, num):
         self.num = num
     weights = np.array
-    output = np.int
+    output = np.float
 # we have Layer(s) in Neural Network which contains some Cells
-
 
 class Layer:
     cells = []
