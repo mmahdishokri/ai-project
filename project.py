@@ -7,7 +7,7 @@ labels = idx2numpy.convert_from_file('train-labels-idx1-ubyte.idx')
 images_read = open('train-images-idx1-ubyte.idx', 'rb')
 labels_read = open('train-labels-idx1-ubyte.idx', 'rb')
 
-#to write on it
+# to write on it
 f_write = open('myfile_copy2.idx', 'wb')
 idx2numpy.convert_to_file(f_write, read_array)
 string = idx2numpy.convert_to_string(read_array)
@@ -17,24 +17,23 @@ string = idx2numpy.convert_to_string(read_array)
 
 
 class Image:
-    pixels = np.array()
+    pixels = np.array
     num = int
 
 
 class Cell:
     def __init__(self, num):
         self.num = num
-    weights = np.array()
+    weights = np.array
     output = np.int
-
-
-
 # we have Layer(s) in Neural Network which contains some Cells
+
+
 class Layer:
-    self = []
+    cells = []
     for i in range(10):
         x = Cell(i)
-        self.append(x)
+        cells.append(x)
 
 
 def announce_output(layer):
@@ -43,5 +42,13 @@ def announce_output(layer):
 
 
 def announce_error():
-    #   todo the sum of the Squares
+    #   todo the sum of the Squares of Differs
     return Cell(1)
+
+
+def put_random_weights(cell):
+    size = cell.weights.size
+    cell.weights = []
+    for i in range(size):
+        cell.weights.append(np.random.random_sample())
+
