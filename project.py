@@ -1,6 +1,5 @@
 import idx2numpy
 import numpy as np
-from train import *
 
 
 def get_training_data():
@@ -25,11 +24,13 @@ class Cell:
     weights = np.array
 
     def put_random_weights(self):
-        size = self.weights.__sizeof__()
+        # size = self.weights.__sizeof__()
+        size = 28 * 28
         # self.weights = []
         for i in range(size):
             self.weights = \
                 np.append(self.weights, np.random.random_sample())
+        self.weights = np.delete(self.weights, 0)
 
     def __init__(self, num):
         self.num = num
@@ -38,23 +39,12 @@ class Cell:
 
 # we have Layer(s) in Neural Network which contains some Cells
 class Layer:
-    cells = []
-    for i in range(10):
-        cells.append(Cell(i))
+    def __init__(self):
+        self.cells = []
+        for i in range(10):
+            self.cells.append(Cell(i))
 
 
 def announce_error():
-    #   todo the sum of the Squares of Differs
+    # todo the sum of the Squares of Differs
     return Cell(1)
-
-
-def start_training_the_layer(layer):
-    train_images, train_labels = get_training_data()
-    for i in range(train_images.size):
-        image = Image()
-        image.pixels = train_images[i]
-        image.num = train_labels[i]
-        train_layer(layer, image)
-
-
-start_training_the_layer(Layer())
