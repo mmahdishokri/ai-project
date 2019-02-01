@@ -23,8 +23,6 @@ class Image:
 class Cell:
     output = np.float
     weights = np.array
-    # I changed it into list
-    # todo manage it!
 
     def put_random_weights(self):
         size = self.weights.__sizeof__()
