@@ -1,31 +1,12 @@
 import idx2numpy
 import numpy as np
+from train import *
 
-# First to read the training dataSet
-images = idx2numpy.convert_from_file('images.idx')
-labels = idx2numpy.convert_from_file('labels.idx')
-images_read = open('images.idx', 'rb')
-labels_read = open('labels.idx', 'rb')
-# to write on it
-# f_write = open('myfile_copy2.idx', 'wb')
-# idx2numpy.convert_to_file(f_write, read_array)
-# string = idx2numpy.convert_to_string(read_array)
 
-# read_array = idx2numpy.convert_from_file('myfile.idx')
-# f_read = open('myfile.idx', 'rb')
-#
-# read_array = idx2numpy.convert_from_file(f_read)
-# string = f_read.read()
-# read_array = idx2numpy.convert_from_string(string)
-#
-#
-# idx2numpy.convert_to_file('myfile_copy.idx', read_array)
-# f_write = open('myfile_copy2.idx', 'wb')
-# idx2numpy.convert_to_file(f_write, read_array)
-# string = idx2numpy.convert_to_string(read_array)
-#
-# Image
-# Label which is just a digit
+train_images = idx2numpy.convert_from_file('data/train-images-idx3-ubyte')
+train_labels = idx2numpy.convert_from_file('data/train-labels-idx1-ubyte')
+testing_images = idx2numpy.convert_from_file('data/t10k-images-idx3-ubyte')
+testing_labels = idx2numpy.convert_from_file('data/t10k-labels-idx1-ubyte')
 
 
 class Image:
@@ -38,13 +19,13 @@ class Cell:
         self.num = num
     weights = np.array
     output = np.float
-# we have Layer(s) in Neural Network which contains some Cells
 
+
+# we have Layer(s) in Neural Network which contains some Cells
 class Layer:
     cells = []
     for i in range(10):
-        x = Cell(i)
-        cells.append(x)
+        cells.append(Cell(i))
 
 
 def announce_output(layer):
@@ -62,3 +43,14 @@ def put_random_weights(cell):
     cell.weights = []
     for i in range(size):
         cell.weights.append(np.random.random_sample())
+
+
+def start_training_the_layer(layer):
+    for i in range(train_images.size):
+        image = Image()
+        image.pixels = train_images[i]
+        image.num = train_labels[i]
+        train_layer(layer, image)
+
+
+start_training_the_layer(Layer())
