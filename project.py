@@ -3,10 +3,16 @@ import numpy as np
 from train import *
 
 
-train_images = idx2numpy.convert_from_file('data/train-images-idx3-ubyte')
-train_labels = idx2numpy.convert_from_file('data/train-labels-idx1-ubyte')
-testing_images = idx2numpy.convert_from_file('data/t10k-images-idx3-ubyte')
-testing_labels = idx2numpy.convert_from_file('data/t10k-labels-idx1-ubyte')
+def get_training_data():
+    train_images = idx2numpy.convert_from_file('data/train-images-idx3-ubyte')
+    train_labels = idx2numpy.convert_from_file('data/train-labels-idx1-ubyte')
+    return train_images, train_labels
+
+
+def get_testing_data():
+    testing_labels = idx2numpy.convert_from_file('data/t10k-labels-idx1-ubyte')
+    testing_images = idx2numpy.convert_from_file('data/t10k-images-idx3-ubyte')
+    return testing_images, testing_labels
 
 
 class Image:
@@ -15,10 +21,21 @@ class Image:
 
 
 class Cell:
+    output = np.float
+    weights = np.array
+    # I changed it into list
+    # todo manage it!
+
+    def put_random_weights(self):
+        size = self.weights.__sizeof__()
+        # self.weights = []
+        for i in range(size):
+            self.weights = \
+                np.append(self.weights, np.random.random_sample())
+
     def __init__(self, num):
         self.num = num
-    weights = np.array
-    output = np.float
+        self.put_random_weights()
 
 
 # we have Layer(s) in Neural Network which contains some Cells
@@ -28,24 +45,13 @@ class Layer:
         cells.append(Cell(i))
 
 
-def announce_output(layer):
-    #   todo print the max
-    return Cell(1)
-
-
 def announce_error():
     #   todo the sum of the Squares of Differs
     return Cell(1)
 
 
-def put_random_weights(cell):
-    size = cell.weights.size
-    cell.weights = []
-    for i in range(size):
-        cell.weights.append(np.random.random_sample())
-
-
 def start_training_the_layer(layer):
+    train_images, train_labels = get_training_data()
     for i in range(train_images.size):
         image = Image()
         image.pixels = train_images[i]
