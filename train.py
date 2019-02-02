@@ -1,4 +1,19 @@
 import numpy as np
+import json
+
+
+def write_data_to_json(filepath, data):
+    with open(filepath + '.json', 'w') as file:
+        json.dump(data, file)
+
+def write_layre_to_json(filepath, layer):
+    layer_dict = {}
+    for i in range(len(layer.cells)):
+        cell = layer.cells[i]
+        layer_dict[i] = {}
+        layer_dict[i]['num'] = cell.num
+        layer_dict[i]['weights'] = list(cell.weights)
+    write_data_to_json(filepath, layer_dict)
 
 
 def calc_cell_output(c, im):
