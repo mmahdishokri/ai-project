@@ -1,5 +1,7 @@
+from numpy.ma import argmax
+
 from train import train_layer, write_layer_to_json, load_layer_from_json, get_output, get_max_and_min_weights, \
-    train_layer_kernel, get_output_kernel
+    train_layer_kernel, get_output_kernel, get_output_kernel_test
 from project import Image, get_training_data, Layer, get_testing_data
 import numpy as np
 
@@ -47,9 +49,10 @@ def train_and_test_kernel():
         image.num = int(train_labels[i])
         images.append(image)
 
-    MAX = 100
+    MAX_training = 500
+    MAX_test = 500
 
-    alpha = train_layer_kernel(MAX, images)
+    alpha, K = train_layer_kernel(MAX_training, images)
     print('training is done! alpha: ', alpha)
     test_images, test_labels = get_testing_data()
     error = 0
@@ -60,12 +63,19 @@ def train_and_test_kernel():
         cnt = cnt + 1
         image.pixels = np.ravel(test_images[i]) / 256
         image.num = int(test_labels[i])
-        if i % 100 == 0:
-            print("Testing is", str(int(i / 100)) + "% completed.")
-        guess = get_output_kernel(alpha, MAX, images, image)
+        if i % (MAX_test/100) == 0:
+            print("Testing is", str(int(i / (MAX_test/100))) + "% completed.")
+        res = 0
+        res_val = 0
+        for digit in range(10):
+            val = get_output_kernel_test(alpha[digit], MAX_training, images, image, digit)
+            #get_output_kernel(alpha[digit], MAX, K, images, i, digit)
+            if val > res_val:
+                res, res_val = digit, val
+        guess = res
         if int(guess) != int(test_labels[i]):
             error = error + 1
-        if i == MAX:
+        if i == MAX_test - 1:
             break
     print("Error = %.2f%%" % (error / cnt * 100))
 

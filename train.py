@@ -51,44 +51,71 @@ def gaussian_kernel(x, y, sigma=5.0):
     return np.exp(-linalg.norm(x-y)**2 / (2 * (sigma ** 2)))
 
 
-def get_output_kernel(alpha, MAX, images, image):
-    vals = [0] * 10
+
+def get_output_kernel_test(alpha, MAX, images, image, digit):
+    val = 0
     for i in range(MAX):
-        vals[images[i].num] += alpha[i] * gaussian_kernel(images[i].pixels, image.pixels)
+        z = 1
+        if images[i].num != digit:
+            z = -1
+        val += alpha[i] * gaussian_kernel(images[i].pixels, image.pixels) * z
     #print(image.pixels, '---->', end='')
-    print(vals, end=' ')
-    print(' ---> ', argmax(vals))
-    return argmax(vals)
+    #print(vals, end=' ')
+    #print(' ---> ', argmax(vals))
+    return val
+
+def get_output_kernel(alpha, MAX, K, images, theone, digit):
+    val = 0
+    for i in range(MAX):
+        z = 1
+        if images[i].num != digit:
+            z = -1
+        #val += alpha[i] * gaussian_kernel(images[i].pixels, image.pixels) * z
+        val += alpha[i] * K[i][theone] * z
+    #print(image.pixels, '---->', end='')
+    #print(vals, end=' ')
+    #print(' ---> ', argmax(vals))
+    return val
 
 
 def train_layer_kernel(MAX, images):
     MAX = min(MAX, len(images))
     random.shuffle(images)
     K = np.zeros((MAX, MAX))
-    alpha = [0] * MAX
     for i in range(MAX):
         for j in range(MAX):
             K[i][j] = gaussian_kernel(images[i].pixels, images[j].pixels)
         if i % int(MAX/100) == 0:
             print('first phase of training is ' + str(int(i/int(MAX/100))) + '% completed.')
-    cnt = 0
-    for i in range(MAX):
-        image = images[i]
-        ret = get_output_kernel(alpha, MAX, images, image)
-        if ret != image.num:
-            cnt = cnt + 1
-            for j in range(MAX):
-                if images[j].num == ret:
-                    alpha[j] = alpha[j] - 1
-                if images[j].num == image.num:
-                    alpha[j] = alpha[j] + 1
 
-        if i % int(MAX/100) == 0:
-            print('second phase of training is ' + str(int(i/int(MAX/100))) + '% completed.')
+    alpha = []
+    for i in range(10):
+        alpha.append([0]*MAX)
+    for rep in range(20):
+        cnt = 0
+        print('rep = ', rep)
+        for digit in range(10):
+            #print('rep = ', rep)
+            for i in range(MAX):
+                image = images[i]
+                ret = get_output_kernel(alpha[digit], MAX, K, images, i, digit)
+                if (ret > 0) != (image.num == digit):
+                    cnt = cnt + 1
+                    alpha[digit][i] = alpha[digit][i] + 1
+        print(' -->', cnt)
+        if cnt < 10:
+            break
+                    #print(image.num)
+                    #nonzero = 0
+                    #for chi in alpha:
+                        # if chi != 0:
+                        #     nonzero = nonzero + 1
+                    # print('nonzero = ', nonzero)
+                    # if i % int(MAX/100) == 0:
+                    #     print('second phase of training is ' + str(int(i/int(MAX/100))) + '% completed.')
 
     print('Learning is completed! MAX = ' + str(MAX) + 'alpha =', alpha)
-    print('cnt =', cnt)
-    return alpha
+    return alpha, K
 
 
 def calc_cell_output(c, im):
@@ -124,11 +151,6 @@ def perceptron_update_cell_weights(l, im, max_cell):
     # print(l.cells[im.num].weights)
 
 
-
-def kernel_update_cell_weights(l, im, max_cell):
-    # todo
-    return
-
 def get_output(layer, image):
     max_cell_num = 0
     max_cell_output = calc_cell_output(layer.cells[0], image)
@@ -151,5 +173,3 @@ def train_layer(layer, image, algorithm):
         perceptron_update_cell_weights(layer, image, max_cell)
     if algorithm == 'mira':
         mira_update_cell_weights(layer, image, max_cell)
-    if algorithm == 'kernel':
-        kernel_update_cell_weights(layer, image, max_cell)
