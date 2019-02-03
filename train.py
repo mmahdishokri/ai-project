@@ -1,5 +1,11 @@
+import random
+
 import numpy as np
 import json
+
+from numpy import linalg
+from numpy.ma import argmax
+
 from project import Layer, Cell
 
 
@@ -39,6 +45,51 @@ def get_max_and_min_weights(layer):
         mx = max(mx, max(cell.weights))
         mn = min(mn, min(cell.weights))
     return mx, mn
+
+
+def gaussian_kernel(x, y, sigma=5.0):
+    return np.exp(-linalg.norm(x-y)**2 / (2 * (sigma ** 2)))
+
+
+def get_output_kernel(alpha, MAX, images, image):
+    vals = [0] * 10
+    for i in range(MAX):
+        vals[images[i].num] += alpha[i] * gaussian_kernel(images[i].pixels, image.pixels)
+    #print(image.pixels, '---->', end='')
+    print(vals, end=' ')
+    print(' ---> ', argmax(vals))
+    return argmax(vals)
+
+
+def train_layer_kernel(MAX, images):
+    MAX = min(MAX, len(images))
+    random.shuffle(images)
+    K = np.zeros((MAX, MAX))
+    alpha = [0] * MAX
+    for i in range(MAX):
+        for j in range(MAX):
+            K[i][j] = gaussian_kernel(images[i].pixels, images[j].pixels)
+        if i % int(MAX/100) == 0:
+            print('first phase of training is ' + str(int(i/int(MAX/100))) + '% completed.')
+    cnt = 0
+    for i in range(MAX):
+        image = images[i]
+        ret = get_output_kernel(alpha, MAX, images, image)
+        if ret != image.num:
+            cnt = cnt + 1
+            for j in range(MAX):
+                if images[j].num == ret:
+                    alpha[j] = alpha[j] - 1
+                if images[j].num == image.num:
+                    alpha[j] = alpha[j] + 1
+
+        if i % int(MAX/100) == 0:
+            print('second phase of training is ' + str(int(i/int(MAX/100))) + '% completed.')
+
+    print('Learning is completed! MAX = ' + str(MAX) + 'alpha =', alpha)
+    print('cnt =', cnt)
+    return alpha
+
 
 def calc_cell_output(c, im):
     # return 0.5
